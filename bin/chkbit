@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+"use strict";
+
+var _=require("lodash");
+var chkbit=require('../lib/chkbit.js');
+
+var args=getProcessArgs();
+
+function getProcessArgs() {
+  return _.reduce(process.argv.slice(2), function(args, x) {
+    if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; }
+    else args.params.push(x);
+    return args;
+  }, { params: [] });
+}
+
+var opt={
+  status: function(stat, file) { console.log(stat, file); },
+  overwrite: args.force,
+  verbose: args.v,
+  readonly: args.verify,
+};
+
+if (args.params.length!==1) {
+  console.log("usage: chkbit [options] path");
+  console.log("The options are as follows:");
+  console.log("-verify verify without updating the .chkbit files");
+  console.log("-force  overwrite inconsistent checksum (repair)");
+  console.log("-del    delete all .chkbit files");
+  console.log("-v      verbose output");
+} else if (args.del) {
+  chkbit.del(opt, args.params[0]).then(function() { console.log("removed."); });
+} else {
+  chkbit.verify(opt, args.params[0]).then(function(res) {
+    if (res) console.error("error: detected "+res+" file(s) with bitrot!");
+    process.exit(res);
+  }).catch(function(err) {
+    console.error("error: "+err.toString());
+    console.error("you could try to repair the index with -force");
+    process.exit(-1);
+  });
+}

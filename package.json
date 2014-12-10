@@ -1,0 +1,40 @@
+{
+  "name": "chkbit",
+  "description": "lightweight bitrot detection tool",
+  "main": "./lib/chkbit.js",
+  "author": "Christian Zangl",
+  "version": "1.0.0",
+  "tags": [
+    "bitrot"
+  ],
+  "keywords": [
+    "bitrot"
+  ],
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "lodash": "^2.4.1",
+    "md5": "^1.0.0",
+    "promised-io": "^0.3.4"
+  },
+  "bin":
+  {
+    "chkbit": "./bin/chkbit"
+  },
+  "homepage": "https://github.com/laktak/chkbit",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/laktak/chkbit.git"
+  },
+  "bugs":
+  {
+    "url": "https://github.com/laktak/chkbit/issues"
+  },
+  "licenses":
+  [
+    {
+      "type": "MIT",
+      "url": "https://github.com/laktak/chkbit/raw/master/LICENSE"
+    }
+  ]
+}
