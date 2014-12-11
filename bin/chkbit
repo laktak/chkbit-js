@@ -29,14 +29,13 @@ if (args.params.length!==1) {
   console.log("-del    delete all .chkbit files");
   console.log("-v      verbose output");
 } else if (args.del) {
-  chkbit.del(opt, args.params[0]).then(function() { console.log("removed."); });
+  chkbit.del(opt, args.params[0]).then(function(res) { console.error(res+" removed"); });
 } else {
   chkbit.verify(opt, args.params[0]).then(function(res) {
     if (res) console.error("error: detected "+res+" file(s) with bitrot!");
     process.exit(res);
   }).catch(function(err) {
     console.error("error: "+err.toString());
-    console.error("you could try to repair the index with -force");
     process.exit(-1);
   });
 }

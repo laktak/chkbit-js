@@ -1,12 +1,19 @@
 # chkbit
 
-chkbit is a lightweight bitrot detection tool.
+chkbit is a lightweight **bitrot detection tool**.
+
+bitrot (a bit flipping in your data) can occur
+
+- at a low level on the storage media through decay (hdd/sdd)
+- at a high level in the os or firmware through bugs
+
+chkbit is independent of the file system and can help you detect bitrot on you primary system, on backups and in the cloud.
 
 ## Installation
 
 `npm i chkbit -g`
 
-You need to have `md5` in your path.
+If you have `md5sum` (Linux/[Windows](http://gnuwin32.sourceforge.net/packages/coreutils.htm)) or `md5` (Mac) in your path it will be used in place of the slower nodejs module.
 
 ## Usage
 
@@ -20,16 +27,16 @@ chkbit will
 
 For other options see the CLI.
 
-## Restore
+## Repair
 
 chkbit cannot repair bitrot, its job is simply to detect it.
 
 You should
 
 - backup regularly.
-- run bitchk *before* each backup.
+- run chkbit *before* each backup.
 - check for bitrot on the backup media.
-- in case of bitrot restore from a checked backup.
+- in case of bitrot *restore* from a checked backup.
 
 ## FAQ
 
@@ -73,3 +80,5 @@ chkbit.verify(opt, "/path").then(function(res) {
 ```
 chkbit.del(opt, "/path").then(function() { console.log("removed."); });
 ```
+
+Removes all index files.
