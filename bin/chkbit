@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 "use strict";
 
-var _=require("lodash");
+var Promise=require("bluebird"); // use bluebird promises, es6-shim is buggy
+require("es6-shim"); // es6 support
 var chkbit=require('../lib/chkbit.js');
 
 var args=getProcessArgs();
 
 function getProcessArgs() {
-  return _.reduce(process.argv.slice(2), function(args, x) {
+  return process.argv.slice(2).reduce(function(args, x) {
     if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; }
     else args.params.push(x);
     return args;
@@ -29,13 +30,14 @@ if (args.params.length!==1) {
   console.log("-del    delete all .chkbit files");
   console.log("-v      verbose output");
 } else if (args.del) {
-  chkbit.del(opt, args.params[0]).then(function(res) { console.error(res+" removed"); });
+  chkbit.del(opt, args.params[0]).then(function(res) { console.error("removed chkbit from "+res+" dirs"); });
 } else {
   chkbit.verify(opt, args.params[0]).then(function(res) {
     if (res) console.error("error: detected "+res+" file(s) with bitrot!");
     process.exit(res);
   }).catch(function(err) {
     console.error("error: "+err.toString());
+    if (opt.verbose) console.error(err.stack);
     process.exit(-1);
   });
 }
