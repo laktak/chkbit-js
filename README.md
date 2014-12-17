@@ -25,7 +25,23 @@ chkbit will
 - update the index with md5 hashes for every file.
 - report bitrot for files that rotted since the last run (check the exit status).
 
-For other options see the CLI.
+```
+usage: chkbit [options] path [...]
+The options are as follows:
+-verify verify without updating the .chkbit files
+-force  overwrite inconsistent checksum (repair)
+-del    delete all .chkbit files
+-p=N    number of parallel processes to use with native md5 (default 1)
+-i      use node's md5 (ignores -p)
+-v      verbose output
+Status codes:
+'E'     error, md5 mismatch
+'a'     add to index
+'u'     update md5
+' '     not modified (with verbose)
+'r'     repair md5 (with force repair)
+'?'     unknown (with verify)
+```
 
 ## Repair
 
@@ -80,5 +96,4 @@ chkbit.verify(opt, "/path").then(function(res) {
 ```
 chkbit.del(opt, "/path").then(function() { console.log("removed."); });
 ```
-
 Removes all index files.

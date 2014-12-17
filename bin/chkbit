@@ -5,8 +5,6 @@ var Promise=require("bluebird"); // use bluebird promises, es6-shim is buggy
 require("es6-shim"); // es6 support
 var chkbit=require('../lib/chkbit.js');
 
-var args=getProcessArgs();
-
 function getProcessArgs() {
   return process.argv.slice(2).reduce(function(args, x) {
     if (x[0]==="-") { var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; }
@@ -15,6 +13,20 @@ function getProcessArgs() {
   }, { params: [] });
 }
 
+function check(promise) {
+  promise.catch(function(err) {
+    console.error("error: "+err.toString());
+    if (opt.verbose) console.error(err.stack);
+    process.exit(-1);
+  });
+}
+
+var args=getProcessArgs();
+if (!args.i) {
+  var p=parseInt(args.p);
+  chkbit.setMaxParallel(Number.isSafeInteger(p)?p:1);
+} else chkbit.useNativeMd5=false;
+
 var opt={
   status: function(stat, file) { console.log(stat, file); },
   overwrite: args.force,
@@ -22,22 +34,33 @@ var opt={
   readonly: args.verify,
 };
 
-if (args.params.length!==1) {
-  console.log("usage: chkbit [options] path");
+if (args.params.length<1) {
+  console.log("usage: chkbit [options] path [...]");
   console.log("The options are as follows:");
   console.log("-verify verify without updating the .chkbit files");
   console.log("-force  overwrite inconsistent checksum (repair)");
   console.log("-del    delete all .chkbit files");
+  console.log("-p=N    number of parallel processes to use with native md5 (default 1)");
+  console.log("-i      use node's md5 (ignores -p)");
   console.log("-v      verbose output");
+  console.log("Status codes:");
+  console.log("'E'     error, md5 mismatch");
+  console.log("'a'     add to index");
+  console.log("'u'     update md5");
+  console.log("' '     not modified (with verbose)");
+  console.log("'r'     repair md5 (with force repair)");
+  console.log("'?'     unknown (with verify)");
 } else if (args.del) {
-  chkbit.del(opt, args.params[0]).then(function(res) { console.error("removed chkbit from "+res+" dirs"); });
+  check(Promise.all(args.params.map(chkbit.del.bind(null, opt)))
+  .then(function(all) { return all.reduce(function(sum, x) { return sum+x; }); })
+  .then(function(res) { console.error("removed chkbit from "+res+" dirs"); }));
 } else {
-  chkbit.verify(opt, args.params[0]).then(function(res) {
-    if (res) console.error("error: detected "+res+" file(s) with bitrot!");
-    process.exit(res);
-  }).catch(function(err) {
-    console.error("error: "+err.toString());
-    if (opt.verbose) console.error(err.stack);
-    process.exit(-1);
-  });
+  check(Promise.all(args.params.map(chkbit.verify.bind(null, opt)))
+  .then(function(all) { return all.reduce(function(sum, x) { return sum+x; }); })
+  .then(function(res) {
+    if (res) {
+      console.error("error: detected "+res+" file(s) with bitrot!");
+      process.exit(res);
+    }
+  }));
 }
