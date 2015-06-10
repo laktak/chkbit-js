@@ -15,8 +15,10 @@ function getProcessArgs() {
 
 function check(promise) {
   promise.catch(function(err) {
-    console.error("error: "+err.toString());
+    var text=err.toString();
+    console.error(text);
     if (opt.verbose) console.error(err.stack);
+    if (text.indexOf("EMFILE")>=0) console.error("Please upgrade to node 0.12+ to fix this error!");
     process.exit(-1);
   });
 }
