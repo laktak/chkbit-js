@@ -54,6 +54,10 @@ You should
 - check for bitrot on the backup media.
 - in case of bitrot *restore* from a checked backup.
 
+## Ignore files
+
+Add a `.chkbitignore` file containing the names of the files/directories you wish to ignore (expressions are not yet supported.
+
 ## FAQ
 
 ### Should I run `chkbit` on my whole drive?
