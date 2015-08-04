@@ -56,7 +56,7 @@ You should
 
 ## Ignore files
 
-Add a `.chkbitignore` file containing the names of the files/directories you wish to ignore (expressions are not yet supported.
+Add a `.chkbitignore` file containing the names of the files/directories you wish to ignore (expressions are not yet supported).
 
 ## FAQ
 
@@ -72,6 +72,52 @@ The advantage of the .chkbit files is that
 - when you make a backup the index is also backed up
 
 The disadvantage is that you get hidden `.chkbit` files in your content folders.
+
+### How does chkbit work?
+
+chkbit operates on files.
+
+When run for the first time it records a md5 hash of the file contents as well as the file modification time.
+
+When you run it again it first checks the modification time,
+
+- if the time changed (because you made an edit) it records a new md5 hash.
+- otherwise it will compare the current md5 to the recorded value and report an error if they do not match.
+
+### Can I test if chkbit is working correctly?
+
+On Linux/OS X you can try:
+
+Create test and set the modified time:
+```
+$ echo foo1 > test; touch -t 201501010000 test
+$ chkbit .
+a test
+$
+```
+`a` indicates the file was added.
+
+Now update test with a new modified:
+```
+$ echo foo2 > test; touch -t 201501010001 test # update test & modified
+$ chkbit .
+u test
+$
+```
+
+`u` indicates the file was updated.
+
+Now update test with the same modified to simulate bitrot:
+```
+$ echo foo3 > test; touch -t 201501010001 test
+$ chkbit .
+E Test
+error: detected 1 file(s) with bitrot!
+$
+```
+
+`E` indicates an error.
+
 
 ## API Usage
 
