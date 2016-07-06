@@ -18,7 +18,6 @@ function check(promise) {
     var text=err.toString();
     console.error(text);
     if (opt.verbose) console.error(err.stack);
-    if (text.indexOf("EMFILE")>=0) console.error("Please upgrade to node 0.12+ to fix this error!");
     process.exit(-1);
   });
 }
@@ -42,7 +41,7 @@ if (args.params.length<1) {
   console.log("-verify verify without updating the .chkbit files");
   console.log("-force  overwrite inconsistent checksum (repair)");
   console.log("-del    delete all .chkbit files");
-  console.log("-p=N    number of parallel processes to use with native md5 (default 1)");
+  console.log("-p=N    number of parallel operations (default 5)");
   console.log("-i      use node's md5 (ignores -p)");
   console.log("-v      verbose output");
   console.log("Status codes:");

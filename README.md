@@ -31,7 +31,7 @@ The options are as follows:
 -verify verify without updating the .chkbit files
 -force  overwrite inconsistent checksum (repair)
 -del    delete all .chkbit files
--p=N    number of parallel processes to use with native md5 (default 1)
+-p=N    number of parallel operations (default 5)
 -i      use node's md5 (ignores -p)
 -v      verbose output
 Status codes:
@@ -56,7 +56,10 @@ You should
 
 ## Ignore files
 
-Add a `.chkbitignore` file containing the names of the files/directories you wish to ignore (expressions are not yet supported).
+Add a `.chkbitignore` file containing the names of the files/directories you wish to ignore
+
+- each line should contain exactly one name
+- lines starting with `#` are skipped
 
 ## FAQ
 
