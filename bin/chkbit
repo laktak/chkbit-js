@@ -41,7 +41,7 @@ if (args.params.length<1) {
   console.log("-verify verify without updating the .chkbit files");
   console.log("-force  overwrite inconsistent checksum (repair)");
   console.log("-del    delete all .chkbit files");
-  console.log("-p=N    number of parallel operations (default 5)");
+  console.log("-p=N    factor for parallel operations (default 5)");
   console.log("-i      use node's md5 (ignores -p)");
   console.log("-v      verbose output");
   console.log("Status codes:");

@@ -31,7 +31,7 @@ The options are as follows:
 -verify verify without updating the .chkbit files
 -force  overwrite inconsistent checksum (repair)
 -del    delete all .chkbit files
--p=N    number of parallel operations (default 5)
+-p=N    factor for parallel operations (default 5)
 -i      use node's md5 (ignores -p)
 -v      verbose output
 Status codes:
