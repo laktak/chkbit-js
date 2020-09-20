@@ -1,5 +1,7 @@
 # chkbit
 
+** PLEASE SWITCH TO THE [NEW VERSION OF THIS TOOL](https://github.com/laktak/chkbit-py) **
+
 chkbit is a lightweight **bitrot detection tool**.
 
 bitrot (a bit flipping in your data) can occur
